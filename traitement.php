@@ -1,27 +1,79 @@
 <?php
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-$nom = trim($_POST["nom"]);
-$prenom = trim($_POST["prenom"]);
-$email = trim($_POST["email"]);
-$erreur = "";
-if (empty($nom)) {
-$erreur .= "Le nom est obligatoire.<br>";
+
+require 'includes/connexion.php';
+
+require 'includes/validation.php';
+
+require 'includes/fonctions.php';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+    $nom = trim($_POST['nom'] ?? '');
+
+    $prenom = trim($_POST['prenom'] ?? '');
+
+    $email = trim($_POST['email'] ?? '');
+
+    $formation_id =
+    (int)($_POST['formation_id'] ?? 0);
+
+    $erreur = validerFormulaire(
+        $nom,
+        $prenom,
+        $email
+    );
+
+    if ($formation_id <= 0) {
+
+        $erreur .=
+        'Veuillez choisir une formation.<br>';
+
+    }
+
+    if (!empty($erreur)) {
+
+        echo afficherErreur($erreur);
+
+    } else {
+
+        $pdo = getConnexion();
+
+        $stmt = $pdo->prepare(
+
+            'INSERT INTO inscriptions
+            (
+            nom,
+            prenom,
+            email,
+            formation_id,
+            statut_paiement,
+            date_inscription
+            )
+
+            VALUES
+            (?, ?, ?, ?, "en_attente", NOW())'
+
+        );
+
+        $stmt->execute([
+
+            $nom,
+            $prenom,
+            $email,
+            $formation_id
+
+        ]);
+
+        $id = $pdo->lastInsertId();
+
+        header(
+            'Location: paiement.php?id=' . $id
+        );
+
+        exit();
+
+    }
+
 }
-if (empty($prenom)) {
-$erreur .= "Le prénom est obligatoire.<br>";
-}
-if (empty($email)) {
-$erreur .= "L'email est obligatoire.<br>";
-}
-if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-$erreur .= "Format email invalide.<br>";
-}
-}
-// Affichage des erreurs
-if (!empty($erreur)) {
-echo "<div style='color:red;'>$erreur</div>";
-} else {
-echo "<div style='color:green;'>Formulaire valide ✔</div>";
-echo "Nom : $nom <br> Prénom : $prenom <br> Email : $email"; }
 
 ?>

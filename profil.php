@@ -1,8 +1,8 @@
 <?php
 
-$nom = "Saidani";
-$prenom = "Rayen";
-$email = "rayen.saidani@edu.isetcom.tn";
+$nom = "slimani";
+$prenom = "habib";
+$email = "habibslimani@edu.isetcom.tn";
 $age = 20;
 
 $ville = "Tunis";

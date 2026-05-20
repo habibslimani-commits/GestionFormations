@@ -1,10 +1,10 @@
 # GestionFormations
 
-Nom : Rayen Saidani
+Nom : slimani
 
-Prénom : Rayen
+Prénom : habib
 
-Groupe : GTIC L2A
+Groupe : GTIC L2c
 
 ## Description
 
